@@ -492,15 +492,15 @@
 #elif MB(STM3R_MINI)
   #include "stm32f1/pins_STM3R_MINI.h"          // STM32F103VE?                           env:STM32F103VE env:STM32F103RE_maple
 #elif MB(GTM32_PRO_VB)
-  #include "stm32f1/pins_GTM32_PRO_VB.h"        // STM32F103VE                            env:STM32F103VE env:STM32F103RE_maple
+  #include "stm32f1/pins_GTM32_PRO_VB.h"        // STM32F103VE                            env:STM32F103VE env:STM32F103VE_GTM32_maple
 #elif MB(GTM32_PRO_VD)
-  #include "stm32f1/pins_GTM32_PRO_VD.h"        // STM32F103VE                            env:STM32F103VE env:STM32F103RE_maple
+  #include "stm32f1/pins_GTM32_PRO_VD.h"        // STM32F103VE                            env:STM32F103VE env:STM32F103VE_GTM32_maple
 #elif MB(GTM32_MINI)
-  #include "stm32f1/pins_GTM32_MINI.h"          // STM32F103VE                            env:STM32F103VE env:STM32F103RE_maple
+  #include "stm32f1/pins_GTM32_MINI.h"          // STM32F103VE                            env:STM32F103VE env:STM32F103VE_GTM32_maple
 #elif MB(GTM32_MINI_A30)
-  #include "stm32f1/pins_GTM32_MINI_A30.h"      // STM32F103VE                            env:STM32F103VE env:STM32F103RE_maple
+  #include "stm32f1/pins_GTM32_MINI_A30.h"      // STM32F103VE                            env:STM32F103VE env:STM32F103VE_GTM32_maple
 #elif MB(GTM32_REV_B)
-  #include "stm32f1/pins_GTM32_REV_B.h"         // STM32F103VE                            env:STM32F103VE env:STM32F103RE_maple
+  #include "stm32f1/pins_GTM32_REV_B.h"         // STM32F103VE                            env:STM32F103VE env:STM32F103VE_GTM32_maple
 #elif MB(MORPHEUS)
   #include "stm32f1/pins_MORPHEUS.h"            // STM32F103RE                            env:STM32F103RE env:STM32F103RE_maple
 #elif MB(CHITU3D)
@@ -556,7 +556,7 @@
 #elif MB(LONGER3D_LK)
   #include "stm32f1/pins_LONGER3D_LK.h"         // STM32F1                                env:STM32F103VE_longer env:STM32F103VE_longer_maple
 #elif MB(CCROBOT_MEEB_3DP)
-  #include "stm32f1/pins_CCROBOT_MEEB_3DP.h"    // STM32F1                                env:STM32F103RC_meeb
+  #include "stm32f1/pins_CCROBOT_MEEB_3DP.h"    // STM32F1                                env:STM32F103RC_meeb_maple
 #elif MB(CHITU3D_V5)
   #include "stm32f1/pins_CHITU3D_V5.h"          // STM32F1                                env:chitu_f103 env:chitu_f103_maple env:chitu_v5_gpio_init env:chitu_v5_gpio_init_maple
 #elif MB(CHITU3D_V6)
@@ -841,8 +841,8 @@
   #elif MB(RAMPS_LONGER3D_LK4PRO)
     #error "BOARD_RAMPS_LONGER3D_LK4PRO is now BOARD_LONGER3D_LKx_PRO. Please update your configuration."
   #elif MB(BTT_SKR_V2_0)
-    #error "BTT_SKR_V2_0 is now BTT_SKR_V2_0_REV_A or BTT_SKR_V2_0_REV_B. See https://bit.ly/3t5d9JQ for more information. Please update your configuration."
-  #elif MB(BOARD_TH3D_EZBOARD_LITE_V2)
+    #error "BOARD_BTT_SKR_V2_0 is now BOARD_BTT_SKR_V2_0_REV_A or BOARD_BTT_SKR_V2_0_REV_B. See https://bit.ly/3t5d9JQ for more information. Please update your configuration."
+  #elif MB(TH3D_EZBOARD_LITE_V2)
     #error "BOARD_TH3D_EZBOARD_LITE_V2 is now BOARD_TH3D_EZBOARD_V2. Please update your configuration."
   #elif defined(MOTHERBOARD)
     #error "Unknown MOTHERBOARD value set in Configuration.h."
@@ -873,6 +873,7 @@
   #undef BOARD_RAMPS_DAGOMA
   #undef BOARD_RAMPS_LONGER3D_LK4PRO
   #undef BOARD_BTT_SKR_V2_0
+  #undef BOARD_TH3D_EZBOARD_LITE_V2
 
 #endif
 
