@@ -168,7 +168,7 @@ static void _lcd_level_bed_corners_get_next_position() {
 
     TERN_(HAS_MARLINUI_U8GLIB, ui.set_font(FONT_MENU)); // Set up the font for extra info
 
-    MenuItem_static::draw(0, GET_TEXT(MSG_PROBING_POINT), SS_INVERT); // "Probing Mesh" heading
+    MenuItem_static::draw(0, GET_TEXT_F(MSG_PROBING_POINT), SS_INVERT); // "Probing Mesh" heading
 
     uint8_t cy = TERN(TFT_COLOR_UI, 3, LCD_HEIGHT - 1), y = LCD_ROW_Y(cy);
 
@@ -197,23 +197,21 @@ static void _lcd_level_bed_corners_get_next_position() {
   void _lcd_draw_raise() {
     if (!ui.should_draw()) return;
     MenuItem_confirm::select_screen(
-        GET_TEXT(MSG_BUTTON_DONE), GET_TEXT(MSG_BUTTON_SKIP)
+        GET_TEXT_F(MSG_BUTTON_DONE), GET_TEXT_F(MSG_BUTTON_SKIP)
       , []{ corner_probing_done = true; wait_for_probe = false; }
       , []{ wait_for_probe = false; }
-      , GET_TEXT(MSG_BED_TRAMMING_RAISE)
-      , (const char*)nullptr, NUL_STR
+      , GET_TEXT_F(MSG_BED_TRAMMING_RAISE)
     );
   }
 
   void _lcd_draw_level_prompt() {
     if (!ui.should_draw()) return;
     MenuItem_confirm::select_screen(
-        GET_TEXT(TERN(HAS_LEVELING, MSG_BUTTON_LEVEL, MSG_BUTTON_DONE)),
-        TERN(HAS_LEVELING, GET_TEXT(MSG_BUTTON_BACK), nullptr)
+        GET_TEXT_F(TERN(HAS_LEVELING, MSG_BUTTON_LEVEL, MSG_BUTTON_DONE)),
+        TERN(HAS_LEVELING, GET_TEXT_F(MSG_BUTTON_BACK), nullptr)
       , []{ queue.inject(TERN(HAS_LEVELING, F("G29N"), FPSTR(G28_STR))); ui.return_to_status(); }
       , TERN(HAS_LEVELING, ui.goto_previous_screen_no_defer, []{})
-      , GET_TEXT(MSG_BED_TRAMMING_IN_RANGE)
-      , (const char*)nullptr, NUL_STR
+      , GET_TEXT_F(MSG_BED_TRAMMING_IN_RANGE)
     );
   }
 
@@ -247,7 +245,7 @@ static void _lcd_level_bed_corners_get_next_position() {
       probe_triggered = PROBE_TRIGGERED();
       if (probe_triggered) {
         endstops.hit_on_purpose();
-        TERN_(LEVEL_CORNERS_AUDIO_FEEDBACK, ui.buzz(200, 600));
+        TERN_(LEVEL_CORNERS_AUDIO_FEEDBACK, BUZZ(200, 600));
       }
       idle();
     }
@@ -332,15 +330,15 @@ static void _lcd_level_bed_corners_homing() {
     bed_corner = 0;
     ui.goto_screen([]{
       MenuItem_confirm::select_screen(
-          GET_TEXT(MSG_BUTTON_NEXT), GET_TEXT(MSG_BUTTON_DONE)
+          GET_TEXT_F(MSG_BUTTON_NEXT), GET_TEXT_F(MSG_BUTTON_DONE)
         , _lcd_goto_next_corner
         , []{
             line_to_z(LEVEL_CORNERS_Z_HOP); // Raise Z off the bed when done
             TERN_(HAS_LEVELING, set_bed_leveling_enabled(leveling_was_active));
             ui.goto_previous_screen_no_defer();
           }
-        , GET_TEXT(TERN(LEVEL_CENTER_TOO, MSG_LEVEL_BED_NEXT_POINT, MSG_NEXT_CORNER))
-        , (const char*)nullptr, PSTR("?")
+        , GET_TEXT_F(TERN(LEVEL_CENTER_TOO, MSG_LEVEL_BED_NEXT_POINT, MSG_NEXT_CORNER))
+        , (const char*)nullptr, F("?")
       );
     });
     ui.set_selection(true);
