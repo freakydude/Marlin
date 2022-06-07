@@ -1,0 +1,93 @@
+#
+# test-builds.yml
+# Do test builds to catch compile errors
+#
+
+name: Build Artillery_Ruby
+
+on:
+  pull_request:
+    branches:
+    - 2.1.x-swx2
+    paths-ignore:
+    - config/**
+    - data/**
+    - docs/**
+    - '**/*.md'
+    tags:
+      - 'v*.*.*.swx2-*'
+  push:
+    branches:
+    - 2.1.x-swx2
+    paths-ignore:
+    - config/**
+    - data/**
+    - docs/**
+    - '**/*.md'
+    tags:
+      - 'v*.*.*.swx2-*'
+
+env:
+  platform-env: Artillery_Ruby
+
+jobs:
+  build:
+    name: Build Artillery_Ruby
+    if: github.repository == 'freakydude/Marlin'
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Check out the PR
+      uses: actions/checkout@v3
+
+    - name: Cache pip
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache PlatformIO
+      uses: actions/cache@v3
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+    - name: Select Python 3.7
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.7' # Version range or exact version of a Python version to use, using semvers version range syntax.
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+    - name: Install PlatformIO
+      run: |
+        pip install -U platformio
+        pio upgrade --dev
+        pio pkg update --global
+
+    - name: Build Artillery Ruby
+      run: |
+        platformio run --environment ${{ env.platform-env }}
+
+    - name: Upload firmware artifact
+      uses: actions/upload-artifact@v3 
+      with:
+        #name: ${{ env.firmware-name }}
+        path: |
+          Marlin/*.h
+          .pio/build/Artillery_Ruby/firmware.bin
+
+    - name: Upload tagged release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        # tag_name: ${{ env.marlin-tag }}.${{ env.firmware-name }}.latest
+        # name: ${{ env.marlin-tag }}.${{ env.firmware-name }}.latest
+        generate_release_notes: true
+        # prerelease: true
+        files: |
+          Marlin/*.h
+          .pio/build/Artillery_Ruby/firmware.bin
