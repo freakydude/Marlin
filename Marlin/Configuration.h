@@ -60,6 +60,15 @@
  *                      https://www.thingiverse.com/thing:1278865
  */
 
+//===========================================================================
+//========================== DELTA / SCARA / TPARA ==========================
+//===========================================================================
+//
+// Download configurations from the link above and customize for your machine.
+// Examples are located in config/examples/delta, .../SCARA, and .../TPARA.
+//
+//===========================================================================
+
 // @section info
 
 // Author info of this build printed to the host during boot and M115
@@ -659,8 +668,7 @@
 #define PID_K1     0.95   // Smoothing factor within any PID loop
 
 #if ENABLED(PIDTEMP)
-  //#define PID_DEBUG             // Print PID debug data to the serial port. Use 'M303 D' to toggle activation.
-  //#define PID_PARAMS_PER_HOTEND // Use separate PID parameters for each extruder (useful for mismatched extruders)
+  //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with G-code: M301 E[extruder number, 0-2]
 
   #if ENABLED(PID_PARAMS_PER_HOTEND)
@@ -765,7 +773,7 @@
 
 #if ENABLED(PIDTEMPBED)
   //#define MIN_BED_POWER 0
-  //#define PID_BED_DEBUG // Print Bed PID debug data to the serial port.
+  //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
@@ -795,7 +803,6 @@
  * impact FET heating. This also works fine on a Fotek SSR-10DA Solid State Relay into a 200W
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use chamber PID until someone else verifies that your hardware works.
- * @section chamber temp
  */
 //#define PIDTEMPCHAMBER
 //#define CHAMBER_LIMIT_SWITCHING
@@ -810,7 +817,7 @@
 
 #if ENABLED(PIDTEMPCHAMBER)
   #define MIN_CHAMBER_POWER 0
-  //#define PID_CHAMBER_DEBUG // Print Chamber PID debug data to the serial port.
+  //#define PID_CHAMBER_DEBUG // Sends debug data to the serial port.
 
   // Lasko "MyHeat Personal Heater" (200w) modified with a Fotek SSR-10DA to control only the heating element
   // and placed inside the small Creality printer enclosure tent.
@@ -824,6 +831,7 @@
 #endif // PIDTEMPCHAMBER
 
 #if ANY(PIDTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
+  //#define PID_DEBUG             // Sends debug data to the serial port. Use 'M303 D' to toggle activation.
   //#define PID_OPENLOOP          // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
   #define PID_FUNCTIONAL_RANGE 25 // If the temperature difference between the target temperature and the actual temperature
@@ -833,7 +841,7 @@
   //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of flash)
 #endif
 
-// @section safety
+// @section extruder
 
 /**
  * Prevent extrusion if the temperature is below EXTRUDE_MINTEMP.
@@ -1051,7 +1059,7 @@
 //============================== Endstop Settings ===========================
 //===========================================================================
 
-// @section endstops
+// @section homing
 
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
@@ -1715,7 +1723,7 @@
 //#define V_HOME_DIR -1
 //#define W_HOME_DIR -1
 
-// @section geometry
+// @section machine
 
 // The size of the printable area
 #define X_BED_SIZE 300
@@ -1923,15 +1931,6 @@
   #define LEVELING_NOZZLE_TEMP 120   // (°C) Only applies to E0 at this time
   #define LEVELING_BED_TEMP     50
 #endif
-
-/**
- * Bed Distance Sensor
- *
- * Measures the distance from bed to nozzle with accuracy of 0.01mm.
- * For information about this sensor https://github.com/markniu/Bed_Distance_sensor
- * Uses I2C port, so it requires I2C library markyue/Panda_SoftMasterI2C.
- */
-//#define BD_SENSOR
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -2189,7 +2188,7 @@
 //============================= Additional Features ===========================
 //=============================================================================
 
-// @section eeprom
+// @section extras
 
 /**
  * EEPROM
@@ -2209,8 +2208,6 @@
   //#define EEPROM_INIT_NOW   // Init EEPROM on first boot after a new build.
 #endif
 
-// @section host
-
 //
 // Host Keepalive
 //
@@ -2220,8 +2217,6 @@
 #define HOST_KEEPALIVE_FEATURE        // Disable this if your host doesn't like keepalive messages
 #define DEFAULT_KEEPALIVE_INTERVAL 2  // Number of seconds between "busy" messages. Set with M113.
 #define BUSY_WHILE_HEATING            // Some hosts require "busy" messages even during heating
-
-// @section units
 
 //
 // G20/G21 Inch mode support
@@ -2355,8 +2350,6 @@
 
 #endif
 
-// @section host
-
 /**
  * Print Job Timer
  *
@@ -2383,8 +2376,6 @@
  */
 #define PRINTJOB_TIMER_AUTOSTART
 
-// @section stats
-
 /**
  * Print Counter
  *
@@ -2401,8 +2392,6 @@
 #if ENABLED(PRINTCOUNTER)
   #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print. A value of 0 will save stats at end of print.
 #endif
-
-// @section security
 
 /**
  * Password
@@ -2439,7 +2428,7 @@
 //============================= LCD and SD support ============================
 //=============================================================================
 
-// @section interface
+// @section lcd
 
 /**
  * LCD LANGUAGE
@@ -2556,16 +2545,6 @@
 //#define REVERSE_SELECT_DIRECTION
 
 //
-// Encoder EMI Noise Filter
-//
-// This option increases encoder samples to filter out phantom encoder clicks caused by EMI noise.
-//
-//#define ENCODER_NOISE_FILTER
-#if ENABLED(ENCODER_NOISE_FILTER)
-  #define ENCODER_SAMPLES 10
-#endif
-
-//
 // Individual Axis Homing
 //
 // Add individual axis homing items (Home X, Home Y, and Home Z) to the LCD menu.
@@ -2595,7 +2574,6 @@
 //======================== LCD / Controller Selection =========================
 //========================   (Character-based LCDs)   =========================
 //=============================================================================
-// @section lcd
 
 //
 // RepRapDiscount Smart Controller.
@@ -2896,12 +2874,6 @@
 // https://github.com/android444/Silvergate
 //
 //#define SILVER_GATE_GLCD_CONTROLLER
-
-//
-// eMotion Tech LCD with SD
-// https://www.reprap-france.com/produit/1234568748-ecran-graphique-128-x-64-points-2-1
-//
-//#define EMOTION_TECH_LCD
 
 //=============================================================================
 //==============================  OLED Displays  ==============================
@@ -3248,7 +3220,7 @@
 //=============================== Extra Features ==============================
 //=============================================================================
 
-// @section fans
+// @section extras
 
 // Set number of user-controlled fans. Disable to use all board-defined fans.
 // :[1,2,3,4,5,6,7,8]
@@ -3257,7 +3229,7 @@
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not as annoying as with the hardware PWM. On the other hand, if this frequency
 // is too low, you should also increment SOFT_PWM_SCALE.
-//#define FAN_SOFT_PWM
+#define FAN_SOFT_PWM
 
 // Incrementing this by 1 will double the software PWM frequency,
 // affecting heaters, and the fan if FAN_SOFT_PWM is enabled.
@@ -3276,6 +3248,9 @@
 // If all hotends, bed temperature, and target temperature are under 54C
 // then the BLUE led is on. Otherwise the RED led is on. (1C hysteresis)
 //#define TEMP_STAT_LEDS
+
+// Support for the BariCUDA Paste Extruder
+//#define BARICUDA
 
 // Support for BlinkM/CyzRgb
 //#define BLINKM
@@ -3372,8 +3347,6 @@
 #if ANY(BLINKM, RGB_LED, RGBW_LED, PCA9632, PCA9533, NEOPIXEL_LED)
   #define PRINTER_EVENT_LEDS
 #endif
-
-// @section servos
 
 /**
  * Number of servos
