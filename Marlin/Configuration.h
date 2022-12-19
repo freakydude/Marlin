@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#define CONFIG_EXAMPLES_DIR "Artillery/Sidewinder X2"
+#define CONFIG_EXAMPLES_DIR "config/examples/Artillery/Sidewinder X2" 
 
 /**
  * Configuration.h
@@ -59,15 +59,6 @@
  * Calibration Objects: https://www.thingiverse.com/thing:5573
  *                      https://www.thingiverse.com/thing:1278865
  */
-
-//===========================================================================
-//========================== DELTA / SCARA / TPARA ==========================
-//===========================================================================
-//
-// Download configurations from the link above and customize for your machine.
-// Examples are located in config/examples/delta, .../SCARA, and .../TPARA.
-//
-//===========================================================================
 
 // @section info
 
@@ -132,7 +123,7 @@
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
 #define SERIAL_PORT_2 1
-#define BAUDRATE_2 115200   // Enable to override BAUDRATE
+#define BAUDRATE_2 115200   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Enable to override BAUDRATE
 
 /**
  * Select a third serial port on the board to use for communication with the host.
@@ -140,7 +131,7 @@
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
 //#define SERIAL_PORT_3 1
-//#define BAUDRATE_3 250000   // Enable to override BAUDRATE
+//#define BAUDRATE_3 250000   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Enable to override BAUDRATE
 
 // Enable the Bluetooth serial interface on AT90USB devices
 //#define BLUETOOTH
@@ -160,20 +151,19 @@
  *
  * Use TMC2208/TMC2208_STANDALONE for TMC2225 drivers and TMC2209/TMC2209_STANDALONE for TMC2226 drivers.
  *
- * Options: A4988, A5984, DRV8825, LV8729, L6470, L6474, POWERSTEP01,
- *          TB6560, TB6600, TMC2100,
+ * Options: A4988, A5984, DRV8825, LV8729, TB6560, TB6600, TMC2100,
  *          TMC2130, TMC2130_STANDALONE, TMC2160, TMC2160_STANDALONE,
  *          TMC2208, TMC2208_STANDALONE, TMC2209, TMC2209_STANDALONE,
  *          TMC26X,  TMC26X_STANDALONE,  TMC2660, TMC2660_STANDALONE,
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
- * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'L6474', 'POWERSTEP01', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
+ * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 #define X_DRIVER_TYPE  TMC2100
 #define Y_DRIVER_TYPE  TMC2100
 #define Z_DRIVER_TYPE  TMC2100
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
-//#define Z2_DRIVER_TYPE A4988
+#define Z2_DRIVER_TYPE TMC2100
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
 //#define I_DRIVER_TYPE  A4988
@@ -578,22 +568,36 @@
 #define DUMMY_THERMISTOR_999_VALUE 100
 
 // Resistor values when using MAX31865 sensors (-5) on TEMP_SENSOR_0 / 1
-//#define MAX31865_SENSOR_OHMS_0      100   // (Ω) Typically 100 or 1000 (PT100 or PT1000)
-//#define MAX31865_CALIBRATION_OHMS_0 430   // (Ω) Typically 430 for Adafruit PT100; 4300 for Adafruit PT1000
-//#define MAX31865_SENSOR_OHMS_1      100
-//#define MAX31865_CALIBRATION_OHMS_1 430
+#if TEMP_SENSOR_IS_MAX_TC(0)
+  #define MAX31865_SENSOR_OHMS_0      100 // (Ω) Typically 100 or 1000 (PT100 or PT1000)
+  #define MAX31865_CALIBRATION_OHMS_0 430 // (Ω) Typically 430 for Adafruit PT100; 4300 for Adafruit PT1000
+#endif
+#if TEMP_SENSOR_IS_MAX_TC(1)
+  #define MAX31865_SENSOR_OHMS_1      100
+  #define MAX31865_CALIBRATION_OHMS_1 430
+#endif
+#if TEMP_SENSOR_IS_MAX_TC(2)
+  #define MAX31865_SENSOR_OHMS_2      100
+  #define MAX31865_CALIBRATION_OHMS_2 430
+#endif
 
-#define TEMP_RESIDENCY_TIME         10  // (seconds) Time to wait for hotend to "settle" in M109
-#define TEMP_WINDOW                  1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_HYSTERESIS              3  // (°C) Temperature proximity considered "close enough" to the target
+#if HAS_E_TEMP_SENSOR
+  #define TEMP_RESIDENCY_TIME         10  // (seconds) Time to wait for hotend to "settle" in M109
+  #define TEMP_WINDOW                  1  // (°C) Temperature proximity for the "temperature reached" timer
+  #define TEMP_HYSTERESIS              3  // (°C) Temperature proximity considered "close enough" to the target
+#endif
 
-#define TEMP_BED_RESIDENCY_TIME     10  // (seconds) Time to wait for bed to "settle" in M190
-#define TEMP_BED_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_BED_HYSTERESIS          3  // (°C) Temperature proximity considered "close enough" to the target
+#if TEMP_SENSOR_BED
+  #define TEMP_BED_RESIDENCY_TIME     10  // (seconds) Time to wait for bed to "settle" in M190
+  #define TEMP_BED_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
+  #define TEMP_BED_HYSTERESIS          3  // (°C) Temperature proximity considered "close enough" to the target
+#endif
 
-#define TEMP_CHAMBER_RESIDENCY_TIME 10  // (seconds) Time to wait for chamber to "settle" in M191
-#define TEMP_CHAMBER_WINDOW          1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_CHAMBER_HYSTERESIS      3  // (°C) Temperature proximity considered "close enough" to the target
+#if TEMP_SENSOR_CHAMBER
+  #define TEMP_CHAMBER_RESIDENCY_TIME 10  // (seconds) Time to wait for chamber to "settle" in M191
+  #define TEMP_CHAMBER_WINDOW          1  // (°C) Temperature proximity for the "temperature reached" timer
+  #define TEMP_CHAMBER_HYSTERESIS      3  // (°C) Temperature proximity considered "close enough" to the target
+#endif
 
 /**
  * Redundant Temperature Sensor (TEMP_SENSOR_REDUNDANT)
@@ -652,23 +656,18 @@
 //============================= PID Settings ================================
 //===========================================================================
 
-// @section hotend temp
+// Enable PIDTEMP for PID control or MPCTEMP for Predictive Model.
+// temperature control. Disable both for bang-bang heating.
+#define PIDTEMP          // See the PID Tuning Guide at https://reprap.org/wiki/PID_Tuning
+//#define MPCTEMP        // ** EXPERIMENTAL **
 
-/**
- * Temperature Control
- *
- *  (NONE) : Bang-bang heating
- * PIDTEMP : PID temperature control (~4.1K)
- * MPCTEMP : Predictive Model temperature control. (~1.8K without auto-tune)
- */
-#define PIDTEMP           // See the PID Tuning Guide at https://reprap.org/wiki/PID_Tuning
-//#define MPCTEMP         // ** EXPERIMENTAL ** See https://marlinfw.org/docs/features/model_predictive_control.html
-
-#define PID_MAX  255      // Limit hotend current while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
-#define PID_K1     0.95   // Smoothing factor within any PID loop
+#define BANG_MAX 255     // Limits current to nozzle while in bang-bang mode; 255=full current
+#define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
+#define PID_K1 0.95      // Smoothing factor within any PID loop
 
 #if ENABLED(PIDTEMP)
-  //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
+  //#define PID_DEBUG             // Print PID debug data to the serial port. Use 'M303 D' to toggle activation.
+  //#define PID_PARAMS_PER_HOTEND // Use separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with G-code: M301 E[extruder number, 0-2]
 
   #if ENABLED(PID_PARAMS_PER_HOTEND)
@@ -773,7 +772,7 @@
 
 #if ENABLED(PIDTEMPBED)
   //#define MIN_BED_POWER 0
-  //#define PID_BED_DEBUG // Sends debug data to the serial port.
+  //#define PID_BED_DEBUG // Print Bed PID debug data to the serial port.
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
@@ -803,6 +802,7 @@
  * impact FET heating. This also works fine on a Fotek SSR-10DA Solid State Relay into a 200W
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use chamber PID until someone else verifies that your hardware works.
+ * @section chamber temp
  */
 //#define PIDTEMPCHAMBER
 //#define CHAMBER_LIMIT_SWITCHING
@@ -817,7 +817,7 @@
 
 #if ENABLED(PIDTEMPCHAMBER)
   #define MIN_CHAMBER_POWER 0
-  //#define PID_CHAMBER_DEBUG // Sends debug data to the serial port.
+  //#define PID_CHAMBER_DEBUG // Print Chamber PID debug data to the serial port.
 
   // Lasko "MyHeat Personal Heater" (200w) modified with a Fotek SSR-10DA to control only the heating element
   // and placed inside the small Creality printer enclosure tent.
@@ -831,7 +831,6 @@
 #endif // PIDTEMPCHAMBER
 
 #if ANY(PIDTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
-  //#define PID_DEBUG             // Sends debug data to the serial port. Use 'M303 D' to toggle activation.
   //#define PID_OPENLOOP          // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
   #define PID_FUNCTIONAL_RANGE 25 // If the temperature difference between the target temperature and the actual temperature
@@ -841,7 +840,7 @@
   //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of flash)
 #endif
 
-// @section extruder
+// @section safety
 
 /**
  * Prevent extrusion if the temperature is below EXTRUDE_MINTEMP.
@@ -1059,7 +1058,7 @@
 //============================== Endstop Settings ===========================
 //===========================================================================
 
-// @section homing
+// @section endstops
 
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
@@ -1235,8 +1234,8 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION          800     // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  10000   // E acceleration for retracts
+#define DEFAULT_ACCELERATION           800    // X, Y, Z and E acceleration for printing moves
+#define DEFAULT_RETRACT_ACCELERATION 10000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   2000    // X, Y, Z acceleration for travel (non printing) moves
 
 /**
@@ -1407,28 +1406,7 @@
   #define Z_PROBE_RETRACT_X X_MAX_POS
 #endif
 
-/**
- * Magnetically Mounted Probe
- * For probes such as Euclid, Klicky, Klackender, etc.
- */
-//#define MAG_MOUNTED_PROBE
-#if ENABLED(MAG_MOUNTED_PROBE)
-  #define PROBE_DEPLOY_FEEDRATE (133*60)  // (mm/min) Probe deploy speed
-  #define PROBE_STOW_FEEDRATE   (133*60)  // (mm/min) Probe stow speed
-
-  #define MAG_MOUNTED_DEPLOY_1 { PROBE_DEPLOY_FEEDRATE, { 245, 114, 30 } }  // Move to side Dock & Attach probe
-  #define MAG_MOUNTED_DEPLOY_2 { PROBE_DEPLOY_FEEDRATE, { 210, 114, 30 } }  // Move probe off dock
-  #define MAG_MOUNTED_DEPLOY_3 { PROBE_DEPLOY_FEEDRATE, {   0,   0,  0 } }  // Extra move if needed
-  #define MAG_MOUNTED_DEPLOY_4 { PROBE_DEPLOY_FEEDRATE, {   0,   0,  0 } }  // Extra move if needed
-  #define MAG_MOUNTED_DEPLOY_5 { PROBE_DEPLOY_FEEDRATE, {   0,   0,  0 } }  // Extra move if needed
-  #define MAG_MOUNTED_STOW_1   { PROBE_STOW_FEEDRATE,   { 245, 114, 20 } }  // Move to dock
-  #define MAG_MOUNTED_STOW_2   { PROBE_STOW_FEEDRATE,   { 245, 114,  0 } }  // Place probe beside remover
-  #define MAG_MOUNTED_STOW_3   { PROBE_STOW_FEEDRATE,   { 230, 114,  0 } }  // Side move to remove probe
-  #define MAG_MOUNTED_STOW_4   { PROBE_STOW_FEEDRATE,   { 210, 114, 20 } }  // Side move to remove probe
-  #define MAG_MOUNTED_STOW_5   { PROBE_STOW_FEEDRATE,   {   0,   0,  0 } }  // Extra move if needed
-#endif
-
-// Duet Smart Effector (for delta printers) - https://docs.duet3d.com/en/Duet3D_hardware/Accessories/Smart_Effector
+// Duet Smart Effector (for delta printers) - https://bit.ly/2ul5U7J
 // When the pin is defined you can use M672 to set/reset the probe sensitivity.
 //#define DUET_SMART_EFFECTOR
 #if ENABLED(DUET_SMART_EFFECTOR)
@@ -1723,7 +1701,7 @@
 //#define V_HOME_DIR -1
 //#define W_HOME_DIR -1
 
-// @section machine
+// @section geometry
 
 // The size of the printable area
 #define X_BED_SIZE 300
@@ -1931,6 +1909,15 @@
   #define LEVELING_NOZZLE_TEMP 120   // (°C) Only applies to E0 at this time
   #define LEVELING_BED_TEMP     50
 #endif
+
+/**
+ * Bed Distance Sensor
+ *
+ * Measures the distance from bed to nozzle with accuracy of 0.01mm.
+ * For information about this sensor https://github.com/markniu/Bed_Distance_sensor
+ * Uses I2C port, so it requires I2C library markyue/Panda_SoftMasterI2C.
+ */
+//#define BD_SENSOR
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -2188,7 +2175,7 @@
 //============================= Additional Features ===========================
 //=============================================================================
 
-// @section extras
+// @section eeprom
 
 /**
  * EEPROM
@@ -2208,6 +2195,8 @@
   //#define EEPROM_INIT_NOW   // Init EEPROM on first boot after a new build.
 #endif
 
+// @section host
+
 //
 // Host Keepalive
 //
@@ -2217,6 +2206,8 @@
 #define HOST_KEEPALIVE_FEATURE        // Disable this if your host doesn't like keepalive messages
 #define DEFAULT_KEEPALIVE_INTERVAL 2  // Number of seconds between "busy" messages. Set with M113.
 #define BUSY_WHILE_HEATING            // Some hosts require "busy" messages even during heating
+
+// @section units
 
 //
 // G20/G21 Inch mode support
@@ -2235,7 +2226,7 @@
 //
 #define PREHEAT_1_LABEL       "PLA"
 #define PREHEAT_1_TEMP_HOTEND 200
-#define PREHEAT_1_TEMP_BED     65
+#define PREHEAT_1_TEMP_BED     70
 #define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
@@ -2350,6 +2341,8 @@
 
 #endif
 
+// @section host
+
 /**
  * Print Job Timer
  *
@@ -2376,6 +2369,8 @@
  */
 #define PRINTJOB_TIMER_AUTOSTART
 
+// @section stats
+
 /**
  * Print Counter
  *
@@ -2392,6 +2387,8 @@
 #if ENABLED(PRINTCOUNTER)
   #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print. A value of 0 will save stats at end of print.
 #endif
+
+// @section security
 
 /**
  * Password
@@ -2428,7 +2425,7 @@
 //============================= LCD and SD support ============================
 //=============================================================================
 
-// @section lcd
+// @section interface
 
 /**
  * LCD LANGUAGE
@@ -2545,6 +2542,16 @@
 //#define REVERSE_SELECT_DIRECTION
 
 //
+// Encoder EMI Noise Filter
+//
+// This option increases encoder samples to filter out phantom encoder clicks caused by EMI noise.
+//
+//#define ENCODER_NOISE_FILTER
+#if ENABLED(ENCODER_NOISE_FILTER)
+  #define ENCODER_SAMPLES 10
+#endif
+
+//
 // Individual Axis Homing
 //
 // Add individual axis homing items (Home X, Home Y, and Home Z) to the LCD menu.
@@ -2574,6 +2581,7 @@
 //======================== LCD / Controller Selection =========================
 //========================   (Character-based LCDs)   =========================
 //=============================================================================
+// @section lcd
 
 //
 // RepRapDiscount Smart Controller.
@@ -2874,6 +2882,12 @@
 // https://github.com/android444/Silvergate
 //
 //#define SILVER_GATE_GLCD_CONTROLLER
+
+//
+// eMotion Tech LCD with SD
+// https://www.reprap-france.com/produit/1234568748-ecran-graphique-128-x-64-points-2-1
+//
+//#define EMOTION_TECH_LCD
 
 //=============================================================================
 //==============================  OLED Displays  ==============================
@@ -3220,7 +3234,7 @@
 //=============================== Extra Features ==============================
 //=============================================================================
 
-// @section extras
+// @section fans
 
 // Set number of user-controlled fans. Disable to use all board-defined fans.
 // :[1,2,3,4,5,6,7,8]
@@ -3244,13 +3258,17 @@
 // duty cycle is attained.
 #define SOFT_PWM_DITHER
 
+// @section extras
+
+// Support for the BariCUDA Paste Extruder
+//#define BARICUDA
+
+// @section lights
+
 // Temperature status LEDs that display the hotend and bed temperature.
 // If all hotends, bed temperature, and target temperature are under 54C
 // then the BLUE led is on. Otherwise the RED led is on. (1C hysteresis)
 //#define TEMP_STAT_LEDS
-
-// Support for the BariCUDA Paste Extruder
-//#define BARICUDA
 
 // Support for BlinkM/CyzRgb
 //#define BLINKM
@@ -3347,6 +3365,8 @@
 #if ANY(BLINKM, RGB_LED, RGBW_LED, PCA9632, PCA9533, NEOPIXEL_LED)
   #define PRINTER_EVENT_LEDS
 #endif
+
+// @section servos
 
 /**
  * Number of servos
