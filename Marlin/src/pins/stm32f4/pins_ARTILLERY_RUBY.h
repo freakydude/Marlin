@@ -56,11 +56,18 @@
 #endif
 #if (Z_HOME_DIR == 1)
   #define Z_MIN_PIN                         PC2
-  #define Z_MAX_PIN                         PA0
+  //#define Z_MAX_PIN                         PA0
+  #define Z_MAX_PIN                         -1
 #else
-  #define Z_MIN_PIN                         PA0
+  //#define Z_MIN_PIN                         PA0
+  #define Z_MIN_PIN                         -1
   #define Z_MAX_PIN                         PC2
 #endif
+
+//
+// Runout sensor
+//
+#define FIL_RUNOUT_PIN PA0
 
 //
 // Steppers
