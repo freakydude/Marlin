@@ -65,11 +65,6 @@
 #endif
 
 //
-// Runout sensor
-//
-#define FIL_RUNOUT_PIN PA0
-
-//
 // Steppers
 //
 #define X_STEP_PIN                          PB14
