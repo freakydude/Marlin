@@ -81,7 +81,7 @@ jobs:
           .pio/build/Artillery_Ruby/firmware.bin
 
     - name: Upload tagged release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
       with:
         # tag_name: ${{ env.marlin-tag }}.${{ env.firmware-name }}.latest
